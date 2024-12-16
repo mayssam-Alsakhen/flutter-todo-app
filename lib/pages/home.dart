@@ -61,13 +61,6 @@ class _HomeState extends State<Home> {
                   hintText: "Add a new task",
                   filled: true,
                   fillColor: Colors.deepPurple.shade200 ,
-                  border: OutlineInputBorder( borderRadius:BorderRadius.circular(15)),
-                //   enabledBorder: OutlineInputBorder(
-                //   borderSide: BorderSide(
-                //       color: Colors.white
-                //   ),
-                //   borderRadius: BorderRadius.circular(15),
-                // )
                 ),
               ),
             )
