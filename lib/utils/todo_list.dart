@@ -54,7 +54,7 @@ List<String> subject=[
             ),
             DropdownMenu(
                 textStyle: TextStyle(color: Colors.white),
-                inputDecorationTheme: InputDecorationTheme(outlineBorder:BorderSide.none),
+                inputDecorationTheme: InputDecorationTheme(outlineBorder:BorderSide.none,),
                 width: 150,
                 initialSelection: subject[0],
                 dropdownMenuEntries: subject.map<DropdownMenuEntry<String>>((String subject){
