@@ -1,22 +1,21 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class TodoList extends StatelessWidget {
-   TodoList({super.key, required this.taskName, required this.taskCompleted, required this.onChanged, required this.deleteTask});
+   TodoList({super.key, required this.taskName, required this.taskCompleted, required this.onChanged, required this.deleteTask, required this.course});
 final String taskName;
 final bool taskCompleted;
+final String course;
 final Function(bool?)? onChanged;
 final Function(BuildContext)? deleteTask;
 List<String> subject=[
-  "Course",
-  "CSCI 410",
-  "CSCI 370",
-  "CSCI 426",
-  "CSCI 430"
+  "CACI410",
+  "CSCI370",
+  "CSCI426",
+  "CSCI430"
 ];
   @override
   Widget build(BuildContext context) {
+    print("Course passed to TodoList: $course");
     return Padding(padding: const EdgeInsets.only(
       top: 20,
       left: 20,
@@ -31,7 +30,8 @@ List<String> subject=[
           children: [
             Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Checkbox(value: taskCompleted,
+                Checkbox(
+                    value: taskCompleted,
                     onChanged: onChanged,
                     checkColor: Colors.black,
                     activeColor: Colors.white,
@@ -39,7 +39,8 @@ List<String> subject=[
                     color: Colors.white
                   ),
                 ),
-                Text(taskName,
+                Text(
+                  taskName,
                   style: TextStyle(color: Colors.white, fontSize: 18,
                   decoration: taskCompleted? TextDecoration.lineThrough : TextDecoration.none,
                     decorationColor: Colors.white,
@@ -56,11 +57,13 @@ List<String> subject=[
                 textStyle: TextStyle(color: Colors.white),
                 inputDecorationTheme: InputDecorationTheme(outlineBorder:BorderSide.none,),
                 width: 150,
-                initialSelection: subject[0],
+                initialSelection: course,
                 dropdownMenuEntries: subject.map<DropdownMenuEntry<String>>((String subject){
                   return DropdownMenuEntry(
-                      value: subject, label: subject.toString());}).toList()
+                      value: subject, label: subject.toString());
+                }).toList()
             ),
+
           ],
         ),
 

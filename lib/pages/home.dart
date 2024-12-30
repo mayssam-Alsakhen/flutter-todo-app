@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do/utils/todo_list.dart';
+import 'dart:convert' as convert ;
+import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
    Home({super.key});
@@ -8,13 +9,37 @@ class Home extends StatefulWidget {
   @override
   State<Home> createState() => _HomeState();
 }
-
 class _HomeState extends State<Home> {
   final controller = TextEditingController();
-  List Tasks= [
-    ["flutter project", false],
-    ["web project", false],
-   ];
+  List Tasks = [];
+  void initState() {
+    super.initState();
+    getTasks(); // Fetch tasks when the app starts
+  }
+  void getTasks() async{
+    try{
+      final response = await http.get(Uri.parse('http://10.0.2.2/to_do_app/getTask.php'));
+      Tasks.clear();
+      if(response.statusCode ==200){
+        final jsonResponse = convert.jsonDecode(response.body);
+        setState(() {
+          Tasks = jsonResponse.map((task) {
+            return [
+              task['task_text'],
+              task['isComplete'] == "1",
+              task['course'],
+            ];
+          }).toList();
+        });
+      }
+      else{
+        throw Exception("failed to fetch");
+      }
+    }
+    catch(e){
+      print("error : $e");
+    }
+  }
 
   void checkBoxChanged (int index){
     setState(() {
@@ -24,7 +49,7 @@ class _HomeState extends State<Home> {
 
   void addTask(){
     setState(() {
-        Tasks.add([controller.text, false]);
+        Tasks.add([controller.text,  false, "Course"]);
         controller.clear();
     });
   }
@@ -40,13 +65,16 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.deepPurple.shade300,
       appBar: AppBar(title: Text("Nextask", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),centerTitle: true, backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,),
-      body: ListView.builder(itemCount: Tasks.length, itemBuilder: (BuildContext context, index){
+      body: ListView.builder(itemCount: Tasks.length,
+          itemBuilder: (BuildContext context, index){
         return TodoList(taskName:Tasks[index][0],
         taskCompleted: Tasks[index][1],
+          course: Tasks[index][2],
         onChanged: (value)=>{
           checkBoxChanged(index),
         },
           deleteTask: (context)=>{delete(index),},
+
         );
       }
       ),
@@ -73,7 +101,6 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-
     );
   }
 }
