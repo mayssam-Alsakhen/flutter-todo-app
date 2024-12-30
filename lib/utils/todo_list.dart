@@ -8,6 +8,7 @@ final String course;
 final Function(bool?)? onChanged;
 final Function(BuildContext)? deleteTask;
 List<String> subject=[
+  "Course",
   "CACI410",
   "CSCI370",
   "CSCI426",

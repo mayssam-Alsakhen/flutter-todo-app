@@ -28,6 +28,7 @@ class _HomeState extends State<Home> {
               task['task_text'],
               task['isComplete'] == "1",
               task['course'],
+              task['id'],
             ];
           }).toList();
         });
@@ -40,22 +41,72 @@ class _HomeState extends State<Home> {
       print("error : $e");
     }
   }
+  void addTask() async{
+    String newTaskText = controller.text;
+    String selectedCourse = "Course";
+    try{
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2/to_do_app/addTask.php'),
+        body: {
+          'task_text': newTaskText,
+          'course': selectedCourse,
+          'isComplete': '0',
+        },
+      );
+      if (response.statusCode == 200){
+        final jsonResponse = convert.jsonDecode(response.body);
+        if (jsonResponse['success']){
+          setState(() {
+            Tasks.add([newTaskText, false, selectedCourse]);
+            controller.clear();
+          });
+        }
+        else {
+          print("Failed to add task: ${jsonResponse['message']}");
+        }
+      }
+      else {
+        print("Error: ${response.statusCode}");
+      }
+    }
+    catch(e){
+      print("Error adding task: $e");
+    }
+  }
+
+  void delete (int index) async{
+    try{
+      final taskId = Tasks[index][3];
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2/to_do_app/deleteTask.php'),
+        headers: {"Content-Type": "application/json"},
+        body: convert.jsonEncode({"id": taskId}),
+      );
+
+        if (response.statusCode == 200) {
+         final jsonResponse = convert.jsonDecode(response.body);
+         if (jsonResponse['success']) {
+           setState(() {
+            Tasks.removeAt(index);
+          });
+        } else {
+          print("Error: ${jsonResponse['message']}");
+        }
+      } else {
+        throw Exception("Failed to delete task");
+      }
+    }
+    catch(e){
+      print("Error: $e");
+    }
+    setState(() {
+      Tasks.removeAt(index);
+    });
+  }
 
   void checkBoxChanged (int index){
     setState(() {
       Tasks[index][1] = !Tasks[index][1];
-    });
-  }
-
-  void addTask(){
-    setState(() {
-        Tasks.add([controller.text,  false, "Course"]);
-        controller.clear();
-    });
-  }
-  void delete (int index){
-    setState(() {
-      Tasks.removeAt(index);
     });
   }
 
