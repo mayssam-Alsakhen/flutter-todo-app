@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 
 class TodoList extends StatelessWidget {
-   TodoList({super.key, required this.taskName, required this.taskCompleted, required this.onChanged, required this.deleteTask, required this.course});
-final String taskName;
-final bool taskCompleted;
-final String course;
-final Function(bool?)? onChanged;
-final Function(BuildContext)? deleteTask;
-List<String> subject=[
-  "Course",
-  "CACI410",
-  "CSCI370",
-  "CSCI426",
-  "CSCI430"
-];
+  TodoList({super.key, required this.taskName, required this.taskCompleted, required this.onChanged, required this.deleteTask, required this.course, required this.category});
+  final String taskName;
+  final bool taskCompleted;
+  final String course;
+  final String category;
+  final Function(bool?)? onChanged;
+  final Function(BuildContext)? deleteTask;
+  List<String> subject=[
+    "Course",
+    "CACI410",
+    "CSCI370",
+    "CSCI426",
+    "CSCI430"
+  ];
+  List<String> categories = [
+    "Category",
+    "Pending",
+    "Urgent",
+    "Routine",
+    "Research"
+  ];
   @override
   Widget build(BuildContext context) {
     print("Course passed to TodoList: $course");
@@ -32,18 +40,18 @@ List<String> subject=[
             Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Checkbox(
-                    value: taskCompleted,
-                    onChanged: onChanged,
-                    checkColor: Colors.black,
-                    activeColor: Colors.white,
+                  value: taskCompleted,
+                  onChanged: onChanged,
+                  checkColor: Colors.black,
+                  activeColor: Colors.white,
                   side: BorderSide(
-                    color: Colors.white
+                      color: Colors.white
                   ),
                 ),
                 Text(
                   taskName,
                   style: TextStyle(color: Colors.white, fontSize: 18,
-                  decoration: taskCompleted? TextDecoration.lineThrough : TextDecoration.none,
+                    decoration: taskCompleted? TextDecoration.lineThrough : TextDecoration.none,
                     decorationColor: Colors.white,
                     decorationThickness: 2,
                   ),
@@ -58,16 +66,24 @@ List<String> subject=[
                 textStyle: TextStyle(color: Colors.white),
                 inputDecorationTheme: InputDecorationTheme(outlineBorder:BorderSide.none,),
                 width: 150,
-                initialSelection: course,
+                initialSelection:  subject.contains(course) ? course : "Course",
                 dropdownMenuEntries: subject.map<DropdownMenuEntry<String>>((String subject){
                   return DropdownMenuEntry(
                       value: subject, label: subject.toString());
                 }).toList()
             ),
-
+            DropdownMenu(
+              textStyle: TextStyle(color: Colors.white),
+              inputDecorationTheme: InputDecorationTheme(outlineBorder: BorderSide.none),
+              width: 150,
+              initialSelection: categories.contains(category) ? category : "Category",
+              dropdownMenuEntries: categories
+                  .map<DropdownMenuEntry<String>>((String cat) {
+                return DropdownMenuEntry(value: cat, label: cat.toString());
+              }).toList(),
+            ),
           ],
         ),
-
       ),
     );
   }
