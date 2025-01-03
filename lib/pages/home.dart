@@ -22,13 +22,11 @@ class _HomeState extends State<Home> {
   void getTasks() async{
     try{
       final response = await http.get(Uri.parse('http://10.0.2.2/to_do_app/getTask.php'));
-      Tasks.clear();
+      // Tasks.clear();
       if(response.statusCode ==200){
         final jsonResponse = convert.jsonDecode(response.body);
-        print("Fetched tasks: $jsonResponse");
         setState(() {
           Tasks = jsonResponse.map((task) {
-            print("Task: $task");
             return [
               task['task_text'],
               task['isComplete'].toString() == "1",
@@ -52,7 +50,6 @@ class _HomeState extends State<Home> {
       final response = await http.get(Uri.parse('http://10.0.2.2/to_do_app/getCategories.php'));
       if (response.statusCode == 200) {
         final jsonResponse = convert.jsonDecode(response.body);
-        print("category body" +response.body);
         setState(() {
           categories = jsonResponse.map<String>((category) => category['category_name'] as String).toList();
         });
@@ -67,30 +64,25 @@ class _HomeState extends State<Home> {
   void addTask() async{
     String newTaskText = controller.text.trim();
     String selectedCourse = "Course";
-    // String selectedCategory = "Category";
 
     if (newTaskText.isEmpty) {
       print("Task cannot be empty");
       return;
     }
-
     try{
       final response = await http.post(
         Uri.parse('http://10.0.2.2/to_do_app/addTask.php'),
         body: {
           'task_text': newTaskText,
           'course': selectedCourse,
-          // 'category': selectedCategory,
-          // 'isComplete': '0',
         },
       );
-      print("Response body: ${response.body}");
 
       if (response.statusCode == 200){
         final jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['success']){
           setState(() {
-            Tasks.add([newTaskText, false, selectedCourse, "Category"]);
+            Tasks.add([newTaskText, false, selectedCourse, "Category",jsonResponse['id'],]);
             controller.clear();
           });
         }
@@ -111,6 +103,9 @@ class _HomeState extends State<Home> {
   void delete (int index) async{
     try{
       final taskId = Tasks[index][4];
+      print("Attempting to delete task with ID: $taskId, at index: $index");
+
+      print("id is"+ taskId);
       final response = await http.post(
         Uri.parse('http://10.0.2.2/to_do_app/deleteTask.php'),
         headers: {"Content-Type": "application/json"},
@@ -133,9 +128,6 @@ class _HomeState extends State<Home> {
     catch(e){
       print("Error: $e");
     }
-    setState(() {
-      Tasks.removeAt(index);
-    });
   }
 
   void checkBoxChanged (int index){
@@ -182,6 +174,7 @@ class _HomeState extends State<Home> {
           FloatingActionButton(
             onPressed: (){
               addTask();
+              getTasks();
             },
             child: Icon(Icons.add),
           ),

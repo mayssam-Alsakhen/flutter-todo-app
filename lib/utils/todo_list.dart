@@ -24,7 +24,6 @@ class TodoList extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    print("Course passed to TodoList: $course");
     return Padding(padding: const EdgeInsets.only(
       top: 20,
       left: 20,
@@ -62,26 +61,31 @@ class TodoList extends StatelessWidget {
                     } , child: Icon(Icons.delete,)),
               ],
             ),
-            DropdownMenu(
-                textStyle: TextStyle(color: Colors.white),
-                inputDecorationTheme: InputDecorationTheme(outlineBorder:BorderSide.none,),
-                width: 150,
-                initialSelection:  subject.contains(course) ? course : "Course",
-                dropdownMenuEntries: subject.map<DropdownMenuEntry<String>>((String subject){
-                  return DropdownMenuEntry(
-                      value: subject, label: subject.toString());
-                }).toList()
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                DropdownMenu(
+                    textStyle: TextStyle(color: Colors.white),
+                    inputDecorationTheme: InputDecorationTheme(outlineBorder:BorderSide.none,),
+                    width: 120,
+                    initialSelection:  subject.contains(course) ? course : "Course",
+                    dropdownMenuEntries: subject.map<DropdownMenuEntry<String>>((String subject){
+                      return DropdownMenuEntry(
+                          value: subject, label: subject.toString());
+                    }).toList()
+                ),
+                DropdownMenu(
+                  textStyle: TextStyle(color: Colors.white),
+                  inputDecorationTheme: InputDecorationTheme(outlineBorder: BorderSide.none),
+                  width: 125,
+                  initialSelection: categories.contains(category) ? category : "Category",
+                  dropdownMenuEntries: categories.map<DropdownMenuEntry<String>>((String cat) {
+                    return DropdownMenuEntry(value: cat, label: cat.toString());
+                  }).toList(),
+                ),
+              ],
             ),
-            DropdownMenu(
-              textStyle: TextStyle(color: Colors.white),
-              inputDecorationTheme: InputDecorationTheme(outlineBorder: BorderSide.none),
-              width: 150,
-              initialSelection: categories.contains(category) ? category : "Category",
-              dropdownMenuEntries: categories
-                  .map<DropdownMenuEntry<String>>((String cat) {
-                return DropdownMenuEntry(value: cat, label: cat.toString());
-              }).toList(),
-            ),
+
           ],
         ),
       ),
