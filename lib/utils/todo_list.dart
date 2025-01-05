@@ -30,64 +30,70 @@ class TodoList extends StatelessWidget {
       right: 20,
       bottom: 0,
     ),
-      child: Container(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(color: Colors.deepPurple,
-            borderRadius: BorderRadius.circular(15)),
-        child: Column( crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(color: Colors.deepPurple,
+                borderRadius: BorderRadius.circular(15)),
+            child: Column( crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Checkbox(
-                  value: taskCompleted,
-                  onChanged: onChanged,
-                  checkColor: Colors.black,
-                  activeColor: Colors.white,
-                  side: BorderSide(
-                      color: Colors.white
-                  ),
+                Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Checkbox(
+                      value: taskCompleted,
+                      onChanged: onChanged,
+                      checkColor: Colors.black,
+                      activeColor: Colors.white,
+                      side: BorderSide(
+                          color: Colors.white
+                      ),
+                    ),
+                    Text(
+                      taskName,
+                      style: TextStyle(color: Colors.white, fontSize: 18,
+                        decoration: taskCompleted? TextDecoration.lineThrough : TextDecoration.none,
+                        decorationColor: Colors.white,
+                        decorationThickness: 2,
+                      ),
+                    ),
+                    ElevatedButton(
+                        onPressed: (){
+                          deleteTask!(context);
+                        } , child: Icon(Icons.delete,)),
+                  ],
                 ),
-                Text(
-                  taskName,
-                  style: TextStyle(color: Colors.white, fontSize: 18,
-                    decoration: taskCompleted? TextDecoration.lineThrough : TextDecoration.none,
-                    decorationColor: Colors.white,
-                    decorationThickness: 2,
-                  ),
+                SizedBox(height: 25,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DropdownMenu(
+                        textStyle: TextStyle(color: Colors.white),
+                        inputDecorationTheme: InputDecorationTheme(outlineBorder:BorderSide.none,),
+                        width: 120,
+                        initialSelection:  subject.contains(course) ? course : "Course",
+                        dropdownMenuEntries: subject.map<DropdownMenuEntry<String>>((String subject){
+                          return DropdownMenuEntry(
+                              value: subject, label: subject.toString());
+                        }).toList()
+                    ),
+                    DropdownMenu(
+                      textStyle: TextStyle(color: Colors.white),
+                      inputDecorationTheme: InputDecorationTheme(outlineBorder: BorderSide.none),
+                      width: 125,
+                      initialSelection: categories.contains(category) ? category : "Category",
+                      dropdownMenuEntries: categories.map<DropdownMenuEntry<String>>((String cat) {
+                        return DropdownMenuEntry(value: cat, label: cat.toString());
+                      }).toList(),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                    onPressed: (){
-                      deleteTask!(context);
-                    } , child: Icon(Icons.delete,)),
+                SizedBox(height: 20,)
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DropdownMenu(
-                    textStyle: TextStyle(color: Colors.white),
-                    inputDecorationTheme: InputDecorationTheme(outlineBorder:BorderSide.none,),
-                    width: 120,
-                    initialSelection:  subject.contains(course) ? course : "Course",
-                    dropdownMenuEntries: subject.map<DropdownMenuEntry<String>>((String subject){
-                      return DropdownMenuEntry(
-                          value: subject, label: subject.toString());
-                    }).toList()
-                ),
-                DropdownMenu(
-                  textStyle: TextStyle(color: Colors.white),
-                  inputDecorationTheme: InputDecorationTheme(outlineBorder: BorderSide.none),
-                  width: 125,
-                  initialSelection: categories.contains(category) ? category : "Category",
-                  dropdownMenuEntries: categories.map<DropdownMenuEntry<String>>((String cat) {
-                    return DropdownMenuEntry(value: cat, label: cat.toString());
-                  }).toList(),
-                ),
-              ],
-            ),
-
-          ],
-        ),
+          ),
+          SizedBox(height: 20,)
+        ],
       ),
     );
   }

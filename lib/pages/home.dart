@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
     try{
       final response = await http.get(Uri.parse('http://10.0.2.2/to_do_app/getTask.php'));
       // Tasks.clear();
-      if(response.statusCode ==200){
+      if(response.statusCode == 200){
         final jsonResponse = convert.jsonDecode(response.body);
         setState(() {
           Tasks = jsonResponse.map((task) {
@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
               task['task_text'],
               task['isComplete'].toString() == "1",
               task['course'] ?? 'Course',
-              task['category'].toString() ,
+              task['category_name'].toString() ,
               task['id'],
             ];
           }).toList();
@@ -87,7 +87,6 @@ class _HomeState extends State<Home> {
           });
         }
         else {
-
           print("Failed to add task: ${jsonResponse['message']}");
         }
       }
@@ -103,9 +102,6 @@ class _HomeState extends State<Home> {
   void delete (int index) async{
     try{
       final taskId = Tasks[index][4];
-      print("Attempting to delete task with ID: $taskId, at index: $index");
-
-      print("id is"+ taskId);
       final response = await http.post(
         Uri.parse('http://10.0.2.2/to_do_app/deleteTask.php'),
         headers: {"Content-Type": "application/json"},
@@ -142,20 +138,22 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.deepPurple.shade300,
       appBar: AppBar(title: Text("Nextask", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),centerTitle: true, backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,),
-      body: ListView.builder(itemCount: Tasks.length,
-          itemBuilder: (BuildContext context, index){
-            return TodoList(taskName:Tasks[index][0],
-              taskCompleted: Tasks[index][1],
-              course: Tasks[index][2],
-              category: Tasks[index][3],
-              onChanged: (value)=>{
-                checkBoxChanged(index),
-              },
-              deleteTask: (context)=>{delete(index),},
+      body:
+          ListView.builder(itemCount: Tasks.length,
+              itemBuilder: (BuildContext context, index){
+                return TodoList(taskName:Tasks[index][0],
+                  taskCompleted: Tasks[index][1],
+                  course: Tasks[index][2],
+                  category: Tasks[index][3],
+                  onChanged: (value)=>{
+                    checkBoxChanged(index),
+                  },
+                  deleteTask: (context)=>{delete(index),},
 
-            );
-          }
-      ),
+                );
+              }
+          ),
+
       floatingActionButton: Row(
         children: [
           Expanded(child: Padding(
