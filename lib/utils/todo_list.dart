@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
+import 'dart:convert' as convert ;
+import 'package:http/http.dart' as http;
 
-class TodoList extends StatelessWidget {
-  TodoList({super.key, required this.taskName, required this.taskCompleted, required this.onChanged, required this.deleteTask, required this.course, required this.category});
+class TodoList extends StatefulWidget {
+  TodoList({super.key, required this.taskName, required this.taskCompleted, required this.onChanged, required this.deleteTask, required this.course, required this.category, required this.categories});
   final String taskName;
   final bool taskCompleted;
   final String course;
   final String category;
+  final List<String> categories;
   final Function(bool?)? onChanged;
   final Function(BuildContext)? deleteTask;
+
+  @override
+  State<TodoList> createState() => _TodoListState();
+}
+
+class _TodoListState extends State<TodoList> {
   List<String> subject=[
     "Course",
     "CACI410",
     "CSCI370",
     "CSCI426",
     "CSCI430"
-  ];
-  List<String> categories = [
-    "Category",
-    "Pending",
-    "Urgent",
-    "Routine",
-    "Research"
   ];
   @override
   Widget build(BuildContext context) {
@@ -41,8 +43,8 @@ class TodoList extends StatelessWidget {
                 Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Checkbox(
-                      value: taskCompleted,
-                      onChanged: onChanged,
+                      value: widget.taskCompleted,
+                      onChanged: widget.onChanged,
                       checkColor: Colors.black,
                       activeColor: Colors.white,
                       side: BorderSide(
@@ -50,16 +52,16 @@ class TodoList extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      taskName,
+                      widget.taskName,
                       style: TextStyle(color: Colors.white, fontSize: 18,
-                        decoration: taskCompleted? TextDecoration.lineThrough : TextDecoration.none,
+                        decoration: widget.taskCompleted? TextDecoration.lineThrough : TextDecoration.none,
                         decorationColor: Colors.white,
                         decorationThickness: 2,
                       ),
                     ),
                     ElevatedButton(
                         onPressed: (){
-                          deleteTask!(context);
+                          widget.deleteTask!(context);
                         } , child: Icon(Icons.delete,)),
                   ],
                 ),
@@ -71,7 +73,7 @@ class TodoList extends StatelessWidget {
                         textStyle: TextStyle(color: Colors.white),
                         inputDecorationTheme: InputDecorationTheme(outlineBorder:BorderSide.none,),
                         width: 120,
-                        initialSelection:  subject.contains(course) ? course : "Course",
+                        initialSelection:  subject.contains(widget.course) ? widget.course : "Course",
                         dropdownMenuEntries: subject.map<DropdownMenuEntry<String>>((String subject){
                           return DropdownMenuEntry(
                               value: subject, label: subject.toString());
@@ -81,8 +83,8 @@ class TodoList extends StatelessWidget {
                       textStyle: TextStyle(color: Colors.white),
                       inputDecorationTheme: InputDecorationTheme(outlineBorder: BorderSide.none),
                       width: 125,
-                      initialSelection: categories.contains(category) ? category : "Category",
-                      dropdownMenuEntries: categories.map<DropdownMenuEntry<String>>((String cat) {
+                      initialSelection:widget.categories.contains(widget.category) ? widget.category : "Category",
+                      dropdownMenuEntries: widget.categories.map<DropdownMenuEntry<String>>((String cat) {
                         return DropdownMenuEntry(value: cat, label: cat.toString());
                       }).toList(),
                     ),

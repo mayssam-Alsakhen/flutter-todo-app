@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:to_do/utils/todo_list.dart';
 import 'dart:convert' as convert ;
@@ -52,6 +51,7 @@ class _HomeState extends State<Home> {
         final jsonResponse = convert.jsonDecode(response.body);
         setState(() {
           categories = jsonResponse.map<String>((category) => category['category_name'] as String).toList();
+          print(categories);
         });
       } else {
         throw Exception("failed to fetch categories");
@@ -145,6 +145,7 @@ class _HomeState extends State<Home> {
                   taskCompleted: Tasks[index][1],
                   course: Tasks[index][2],
                   category: Tasks[index][3],
+                  categories: categories,
                   onChanged: (value)=>{
                     checkBoxChanged(index),
                   },
